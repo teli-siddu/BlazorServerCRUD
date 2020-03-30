@@ -1,0 +1,155 @@
+﻿@page "/Data/People"
+@using DataAccessLibrary.DAL.Models;
+@using Models;
+@using BusinessAccessLibrary.BAL.Interface
+@inject IPeopleData _peopleData;
+@inject IJSRuntime jSRuntime;
+
+
+<h1>People Page</h1>
+
+<div id="ResponseMessage" class="col-10 alert alert-info">
+
+</div>
+<EditForm Model="@Person" OnValidSubmit="@InsertPerson">
+
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="add-person-container">
+        <div class="row form-group">
+            <div class="col-md-2">
+                <label>First Name</label>
+            </div>
+            <div class="col-4">
+
+                <input @ref="FirstNameText" type="text" @bind="Person.FirstName" id="FirstName" class="form-control" />
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-md-2">
+                <label>Last Name</label>
+            </div>
+            <div class="col-4">
+                <InputText id="LastName" @bind-Value="Person.LastName" class="form-control" />
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-md-2">
+                <label>Email</label>
+            </div>
+            <div class="col-4">
+                <InputText id="Email" @bind-Value="@Person.Email" class="form-control" />
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-md-2">
+                <label>City</label>
+            </div>
+            <div class="col-4">
+                <InputSelect @bind-Value="Person.City" class="form-control">
+
+                    @foreach (var city in Cities)
+                    {
+                        <option value="@city.Id"> @city.Name</option>
+                    }
+                </InputSelect>
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-10">
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+
+    </div>
+</EditForm>
+
+@if (people is null)
+{
+    <p><em>Loading...</em> </p>
+}
+else
+{
+
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>City</th>
+
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var person in people)
+            {
+                <tr>
+                    <td>@person.FirstName</td>
+                    <td>@person.LastName</td>
+                    <td>@person.Email</td>
+                    <td>@person.City.Name</td>
+                </tr>
+            }
+
+
+        </tbody>
+    </table>
+}
+
+@code {
+
+    private List<PersonModel> people;
+
+    //public DisplayPersonModel Person { get; set; }
+
+    public List<CityModel> Cities = new List<CityModel>();
+
+    private DisplayPersonModel Person = new DisplayPersonModel();
+
+    ElementReference FirstNameText;
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+
+        if (firstRender && Cities.Count == 0)
+        {
+            Cities = await _peopleData.GetCities();
+            StateHasChanged();
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        people = await _peopleData.GetPeople();
+    }
+
+
+    private async Task InsertPerson()
+    {
+
+        PersonModel p = new PersonModel
+        {
+            FirstName = Person.FirstName,
+            LastName = Person.LastName,
+            Email = Person.Email,
+            City = new CityModel()
+            {
+                Name=Person.City
+            }
+        };
+        await _peopleData.InsertPerson(p);
+        //people.Add(Person);
+        people = await _peopleData.GetPeople();
+        Person = new DisplayPersonModel();
+        await jSRuntime.InvokeVoidAsync("SaveMessage", p.FirstName, p.LastName);
+        await jSRuntime.InvokeVoidAsync("SetFOcusOnElement", FirstNameText);
+
+    }
+
+}
