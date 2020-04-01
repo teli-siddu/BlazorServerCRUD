@@ -2,15 +2,21 @@
 @using DataAccessLibrary.DAL.Models;
 @using Models;
 @using BusinessAccessLibrary.BAL.Interface
+@using RazorClassLibrary;
+
 @inject IPeopleData _peopleData;
 @inject IJSRuntime jSRuntime;
 
 
+
 <h1>People Page</h1>
 
-<div id="ResponseMessage" class="col-10 alert alert-info">
+@*<div id="ResponseMessage" class="col-10 alert alert-info">
 
-</div>
+    </div>*@
+<Messages ResponseMessageIsVisble="ResponseMessageIsVisble" Result="Result">
+    <span>Person: </span>  @RecordName
+</Messages>
 <EditForm Model="@Person" OnValidSubmit="@InsertPerson">
 
     <DataAnnotationsValidator />
@@ -47,13 +53,14 @@
                 <label>City</label>
             </div>
             <div class="col-4">
-                <InputSelect @bind-Value="Person.City" class="form-control">
+                @*<InputSelect @bind-Value="Person.City" class="form-control">
 
-                    @foreach (var city in Cities)
-                    {
-                        <option value="@city.Id"> @city.Name</option>
-                    }
-                </InputSelect>
+                        @foreach (var city in Cities)
+                        {
+                            <option value="@city.Id"> @city.Name</option>
+                        }
+                    </InputSelect>*@
+                <SelectCity></SelectCity>
             </div>
         </div>
 
@@ -73,32 +80,55 @@
 else
 {
 
+    <MatTable Items="@people.ToArray()" class="mat-elevation-z5" Striped="true">
 
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Email</th>
-                <th>City</th>
+        <MatTableHeader>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>City</th>
+        </MatTableHeader>
 
 
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var person in people)
-            {
+        <MatTableRow>
+
+            <td>@context.FirstName</td>
+            <td>@context.LastName</td>
+            <td>@context.Email</td>
+            <td>@context.City.Name</td>
+        </MatTableRow>
+
+
+
+
+
+
+    </MatTable>
+    @*<table class="table table-striped">
+            <thead>
                 <tr>
-                    <td>@person.FirstName</td>
-                    <td>@person.LastName</td>
-                    <td>@person.Email</td>
-                    <td>@person.City.Name</td>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>City</th>
+
+
                 </tr>
-            }
+            </thead>
+            <tbody>
+                @foreach (var person in people)
+                {
+                    <tr>
+                        <td>@person.FirstName</td>
+                        <td>@person.LastName</td>
+                        <td>@person.Email</td>
+                        <td>@person.City.Name</td>
+                    </tr>
+                }
 
 
-        </tbody>
-    </table>
+            </tbody>
+        </table>*@
 }
 
 @code {
@@ -113,16 +143,23 @@ else
 
     ElementReference FirstNameText;
 
+    public bool ResponseMessageIsVisble { get; set; } = false;
+    public string RecordName { get; set; }
+    public bool Result { get; set; }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
 
-        if (firstRender && Cities.Count == 0)
-        {
-            Cities = await _peopleData.GetCities();
-            StateHasChanged();
-        }
-    }
+
+    //protected override async Task OnAfterRenderAsync(bool firstRender)
+    //{
+
+    //    if (firstRender && Cities.Count == 0)
+    //    {
+    //        Cities = await _peopleData.GetCities();
+    //        StateHasChanged();
+    //    }
+    //}
+
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -140,16 +177,31 @@ else
             Email = Person.Email,
             City = new CityModel()
             {
-                Name=Person.City
+                Id = Convert.ToInt32(Person.City),
+                Name = Cities.Where(x => x.Id == Convert.ToInt32(Person.City)).Select(x => x.Name).FirstOrDefault()
             }
         };
-        await _peopleData.InsertPerson(p);
-        //people.Add(Person);
-        people = await _peopleData.GetPeople();
+        int retVal = await _peopleData.InsertPerson(p);
+        ResponseMessageIsVisble = true;
+        if (retVal < 1)
+        {
+            Result = false;
+
+            return;
+        }
+
+        people.Add(p);
+
+        //RecordName = p.FirstName +p.LastName;
+        RecordName = p.FirstName + " " + p.LastName;
+        Result = true;
+        // people = await _peopleData.GetPeople();
         Person = new DisplayPersonModel();
-        await jSRuntime.InvokeVoidAsync("SaveMessage", p.FirstName, p.LastName);
+        // await jSRuntime.InvokeVoidAsync("SaveMessage", p.FirstName, p.LastName);
         await jSRuntime.InvokeVoidAsync("SetFOcusOnElement", FirstNameText);
 
     }
 
 }
+
+

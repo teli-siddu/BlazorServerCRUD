@@ -14,6 +14,7 @@ using BlazorServerCRUD.Data;
 using DataAccessLibray.DAL.Concrete;
 using BusinessAccessLibrary.BAL.Interface;
 using BusinessAccessLibrary.BAL.Conrete;
+using System.Net.Http;
 
 namespace BlazorServerCRUD
 {
@@ -36,6 +37,19 @@ namespace BlazorServerCRUD
             //services.AddTransient<ISqlDataAccess, DataAccessLibrary.SqlDataAccess>();
             services.AddTransient<IPeopleData, PeopleData>();
             services.AddTransient<IDBManager, DBManager>();
+
+            if (services.All(x => x.ServiceType != typeof(HttpClient)))
+            {
+                services.AddScoped(
+                    s =>
+                    {
+                        var navigationManager = s.GetRequiredService<NavigationManager>();
+                        return new HttpClient
+                        {
+                            BaseAddress = new Uri(navigationManager.BaseUri)
+                        };
+                    });
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

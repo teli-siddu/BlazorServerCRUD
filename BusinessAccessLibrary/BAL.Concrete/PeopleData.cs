@@ -45,25 +45,32 @@ namespace BusinessAccessLibrary.BAL.Conrete
             
         }
 
-        public Task<int> InsertPerson(PersonModel person)
+        public async Task<int> InsertPerson(PersonModel person)
         {
             //List<IDbDataParameter> parameters = new List<IDbDataParameter>();
             //foreach (var property in person.GetType().GetProperties()) 
             //{
             //    parameters.Add(_dBManager.CreateParameter(property.Name,property.GetValue ));
             //}
-
-            IDataParameter[] parameters =
+            try
             {
+                IDataParameter[] parameters =
+           {
                 _dBManager.CreateParameter("@FirstName",person.FirstName,DbType.String),
                 _dBManager.CreateParameter("@LastName",person.LastName,DbType.String),
-                _dBManager.CreateParameter("@Email",person.Email,DbType.String),
-                _dBManager.CreateParameter("@City",person.City.Name,DbType.String)
+                _dBManager.CreateParameter("@Email",person.Email==null?"":person.Email,DbType.String),
+                _dBManager.CreateParameter("@City",person.City.Id,DbType.String)
             };
 
-            string query = "insert into people(FirstName,LastName,Email,City) values(@FirstName,@LastName,@Email,@City)";
+                string query = "insert into people(FirstName,LastName,Email,City) values(@FirstName,@LastName,@Email,@City)";
 
-            return _dBManager.InsertAsync(query, CommandType.Text, parameters);
+                return await _dBManager.InsertAsync(query, CommandType.Text, parameters);
+            }
+            catch (Exception x) 
+            {
+                return 0;
+            }
+           
         }
 
         public PersonModel GetPersonModel(DataRow dr) 

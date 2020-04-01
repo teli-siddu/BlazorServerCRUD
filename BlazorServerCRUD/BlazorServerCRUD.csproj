@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -6,15 +6,28 @@
 
   <ItemGroup>
     <Compile Remove="Pages\MyPages\**" />
+    <Compile Remove="Shared\ValidationMessages\**" />
     <Content Remove="Pages\MyPages\**" />
+    <Content Remove="Shared\ValidationMessages\**" />
     <EmbeddedResource Remove="Pages\MyPages\**" />
+    <EmbeddedResource Remove="Shared\ValidationMessages\**" />
     <None Remove="Pages\MyPages\**" />
+    <None Remove="Shared\ValidationMessages\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Shared\Messages.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MatBlazor" Version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\BusinessAccessLibrary\BusinessAccessLibrary.csproj" />
     <ProjectReference Include="..\DataAccessLibrary\DataAccessLibrary.csproj" />
     <ProjectReference Include="..\Models\ModelsLibrary.csproj" />
+    <ProjectReference Include="..\RazorClassLibrary\RazorClassLibrary.csproj" />
   </ItemGroup>
 
 </Project>

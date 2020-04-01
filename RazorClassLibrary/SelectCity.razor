@@ -1,0 +1,31 @@
+﻿@using Microsoft.JSInterop
+@inject IJSRuntime JSRuntime
+@using DataAccessLibrary.DAL.Models
+@using BusinessAccessLibrary.BAL.Interface
+@inject IPeopleData _peopleData
+
+<select  class="form-control">
+
+    @foreach (var city in Cities)
+    {
+        <option value="@city.Id"> @city.Name</option>
+    }
+</select>
+
+@code {
+
+    public List<CityModel> Cities = new List<CityModel>();
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+
+        if (firstRender && Cities.Count == 0)
+        {
+            Cities = await _peopleData.GetCities();
+            StateHasChanged();
+        }
+    }
+
+}
+

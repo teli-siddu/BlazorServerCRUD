@@ -7,9 +7,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorServerCRUD", "BlazorS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccessLibrary", "DataAccessLibrary\DataAccessLibrary.csproj", "{17EF0925-3C06-4B6B-8AB1-856B07B37C97}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessAccessLibrary", "BusinessAccessLibrary\BusinessAccessLibrary.csproj", "{20FF4EE0-28CE-41C6-9FCC-586C0D9497FD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessAccessLibrary", "BusinessAccessLibrary\BusinessAccessLibrary.csproj", "{20FF4EE0-28CE-41C6-9FCC-586C0D9497FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelsLibrary", "Models\ModelsLibrary.csproj", "{4953CB79-D498-4836-9A23-101D67D703BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModelsLibrary", "Models\ModelsLibrary.csproj", "{4953CB79-D498-4836-9A23-101D67D703BE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RazorClassLibrary", "RazorClassLibrary\RazorClassLibrary.csproj", "{98F4EE47-CCDE-48CD-936B-0C13F2DE69EA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAPI", "WebAPI\WebAPI.csproj", "{2E395889-BE60-469F-A338-0FF6F9BE7E86}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +37,14 @@ Global
 		{4953CB79-D498-4836-9A23-101D67D703BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4953CB79-D498-4836-9A23-101D67D703BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4953CB79-D498-4836-9A23-101D67D703BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98F4EE47-CCDE-48CD-936B-0C13F2DE69EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98F4EE47-CCDE-48CD-936B-0C13F2DE69EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98F4EE47-CCDE-48CD-936B-0C13F2DE69EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98F4EE47-CCDE-48CD-936B-0C13F2DE69EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E395889-BE60-469F-A338-0FF6F9BE7E86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E395889-BE60-469F-A338-0FF6F9BE7E86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E395889-BE60-469F-A338-0FF6F9BE7E86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E395889-BE60-469F-A338-0FF6F9BE7E86}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
