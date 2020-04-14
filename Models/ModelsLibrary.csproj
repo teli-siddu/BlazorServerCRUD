@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <Compile Remove="CityModel.cs" />
+    <Compile Remove="FileModel.cs" />
     <Compile Remove="PersonModel.cs" />
   </ItemGroup>
 

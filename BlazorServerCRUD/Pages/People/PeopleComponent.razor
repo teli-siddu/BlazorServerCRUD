@@ -1,11 +1,7 @@
 ﻿@page "/Data/People"
 @using DataAccessLibrary.DAL.Models;
-@using Models;
-@using BusinessAccessLibrary.BAL.Interface
-@using RazorClassLibrary;
-
-@inject IPeopleData _peopleData;
 @inject IJSRuntime jSRuntime;
+
 
 
 
@@ -14,10 +10,10 @@
 @*<div id="ResponseMessage" class="col-10 alert alert-info">
 
     </div>*@
-<Messages ResponseMessageIsVisble="ResponseMessageIsVisble" Result="Result">
+<Messages ResponseMessageIsVisble="ResponseMessageIsVisble" Result="Result" >
     <span>Person: </span>  @RecordName
 </Messages>
-<EditForm Model="@Person" OnValidSubmit="@InsertPerson">
+<EditForm Model="@Person"  Context="formContext" enctype="multipart/form-data" >
 
     <DataAnnotationsValidator />
     <ValidationSummary />
@@ -53,20 +49,47 @@
                 <label>City</label>
             </div>
             <div class="col-4">
-                @*<InputSelect @bind-Value="Person.City" class="form-control">
+                @*<InputSelect @bind-Value="Person.CityId"  class="form-control">
 
                         @foreach (var city in Cities)
                         {
                             <option value="@city.Id"> @city.Name</option>
                         }
                     </InputSelect>*@
-                <SelectCity></SelectCity>
+
+                <select @bind="@Person.CityId" class="form-control">
+                  
+                        @foreach (var city in cities)
+                        {
+                            <option value="@city.Id"> @city.Name</option>
+                        }
+                    
+
+                </select>
+                @*<SelectCity OnChangeEvent="OnSelectCityChange" ></SelectCity>*@
             </div>
         </div>
 
+        <div class="form-group row">
+            <div class="col-md-4 offset-2">
+               <InputFile OnChange="HandleSelection" class="form-control" multiple  />
+            </div>
+        </div>
+
+       
         <div class="row form-group">
             <div class="col-10">
-                <button type="submit" class="btn btn-primary">Save</button>
+                @if (Update)
+                {
+                    <button type="button" class="btn btn-primary" @onclick="(() => UpdatePerson(formContext))">Update</button>
+
+                }
+                else
+                {
+                    <button type="button" class="btn btn-primary" @onclick="(() => AddPerson(formContext))">Save</button>
+
+                }
+
             </div>
         </div>
 
@@ -80,7 +103,7 @@
 else
 {
 
-    <MatTable Items="@people.ToArray()" class="mat-elevation-z5" Striped="true">
+    @*<MatTable Items="@people.ToArray()" class="mat-elevation-z5" Striped="true">
 
         <MatTableHeader>
             <th>First Name</th>
@@ -103,14 +126,25 @@ else
 
 
 
-    </MatTable>
-    @*<table class="table table-striped">
+    </MatTable>*@
+
+    <div class="row form-group">
+        <div class="col-md-4">
+            <input @bind="searchModel.Name" placeholder="Search" class="form-control" />
+        </div>
+        <div class="col-md-2">
+            <button type="button" @onclick="( () =>Search())" >Search</button>
+        </div>
+    </div>
+    
+    <table class="table table-striped">
             <thead>
                 <tr>
                     <th>First Name</th>
                     <th>Last Name</th>
                     <th>Email</th>
                     <th>City</th>
+                    <th>Actions</th>
 
 
                 </tr>
@@ -122,26 +156,29 @@ else
                         <td>@person.FirstName</td>
                         <td>@person.LastName</td>
                         <td>@person.Email</td>
-                        <td>@person.City.Name</td>
+                        <td>@person?.City?.Name</td>
+                        <td> <a style="cursor:pointer;color:red;font-weight:bold" @onclick="(()=>DeletePerson(person.Id) )">Delete</a> |  <a style="cursor:pointer;color:blue;font-weight:bold" @onclick="(()=>EditPerson(person.Id) )">Edit</a> </td>
                     </tr>
                 }
 
 
             </tbody>
-        </table>*@
+        </table>
 }
 
 @code {
 
-    private List<PersonModel> people;
+    //private List<PersonModel> people;
 
     //public DisplayPersonModel Person { get; set; }
 
-    public List<CityModel> Cities = new List<CityModel>();
 
-    private DisplayPersonModel Person = new DisplayPersonModel();
+
 
     ElementReference FirstNameText;
+    MultipartFormDataContent multipartFormDataContent;
+
+
 
     public bool ResponseMessageIsVisble { get; set; } = false;
     public string RecordName { get; set; }
@@ -149,39 +186,123 @@ else
 
 
 
+    string status;
+
+    async Task HandleSelection(IFileListEntry[] files)
+    {
+        files1 = files;
+        var file = files.FirstOrDefault();
+
+        if (file != null)
+        {
+
+
+            // Just load into .NET memory to show it can be done
+            // Alternatively it could be saved to disk, or parsed in memory, or similar
+            //var ms = new MemoryStream();
+            //await file.Data.CopyToAsync(ms);
+
+            //status = $"Finished loading {file.Size} bytes from {file.Name}";
+
+            //multipartFormDataContent = new MultipartFormDataContent {
+            //    { new ByteArrayContent(ms.GetBuffer()), "\"upload\"", file.Name }
+            //};
+
+
+
+            //await httpClient.PostAsync("https://localhost:44333/api/people/Upload", multipartFormDataContent);
+        }
+
+        //FileModel[] uploadedFiles= files.AsEnumerable().Select(x => new FileModel()
+        //{
+        //    Name = x.Name,
+        //    Data = x.Data,
+        //    Type = x.Type,
+        //    LastModified=x.LastModified,
+        //    Size=x.Size
+
+        //}).ToArray<FileModel>();
+
+        //Person.Files = uploadedFiles;
+
+
+    }
+
+
     //protected override async Task OnAfterRenderAsync(bool firstRender)
     //{
 
     //    if (firstRender && Cities.Count == 0)
     //    {
-    //        Cities = await _peopleData.GetCities();
-    //        StateHasChanged();
+    //        //Cities = await _peopleData.GetCities();
+    //        //StateHasChanged();
     //    }
+    //}
+    private void OnSelectCityChange(ChangeEventArgs changeEventArgs)
+    {
+        Person.CityId =  (int)changeEventArgs.Value;
+    }
+
+    //protected async Task DeletePerson(int Id)
+    //{
+    //    await httpClient.DeleteAsync("https://localhost:44333/api/people?Id="+Id+"");
+    //    people.Remove(people.Where(x => x.Id == Id).Select(x=>x).FirstOrDefault());
+
+    //}
+    //protected async Task   EditPerson(int Id)
+    //{
+
+
+    //    Person = people.Where(x => x.Id == Id).Select(x => x).FirstOrDefault();
     //}
 
 
-
-    protected override async Task OnInitializedAsync()
-    {
-        people = await _peopleData.GetPeople();
-    }
+    //protected override async Task OnInitializedAsync()
+    //{
+    //    //people = await _peopleData.GetPeople();
+    //    people = await httpClient.GetJsonAsync<List<PersonModel>>("https://localhost:44333/api/people");//api
+    //}
 
 
     private async Task InsertPerson()
     {
 
-        PersonModel p = new PersonModel
+        //PersonModel p = new PersonModel
+        //{
+        //    Id=Person.Id,
+        //    FirstName = Person.FirstName,
+        //    LastName = Person.LastName,
+        //    Email = Person.Email,
+        //    //City = new CityModel()
+        //    //{
+        //    //    Id = Convert.ToInt32(Person.City),
+        //    //    Name = Cities.Where(x => x.Id == Convert.ToInt32(Person.City)).Select(x => x.Name).FirstOrDefault()
+        //    //},
+        //    CityId=
+        //    // Files=Person.Files
+
+
+        //};
+        //  int retVal = await _peopleData.InsertPerson(Person);
+        int retVal = 0;
+        if (Person.Id == 0)
         {
-            FirstName = Person.FirstName,
-            LastName = Person.LastName,
-            Email = Person.Email,
-            City = new CityModel()
-            {
-                Id = Convert.ToInt32(Person.City),
-                Name = Cities.Where(x => x.Id == Convert.ToInt32(Person.City)).Select(x => x.Name).FirstOrDefault()
-            }
-        };
-        int retVal = await _peopleData.InsertPerson(p);
+
+
+            var stringContent = new StringContent(Person.ToString());
+
+            //await httpClient.PostAsync("https://localhost:44333/api/people/Upload", stringContent);
+
+        }
+        else
+        {
+            //retVal=await httpClient.PutJsonAsync<int>("https://localhost:44333/api/people", Person);
+            //people = await httpClient.GetJsonAsync<List<PersonModel>>("https://localhost:44333/api/people");//api
+
+
+        }
+
+        //int retVal= await response.Co
         ResponseMessageIsVisble = true;
         if (retVal < 1)
         {
@@ -190,18 +311,18 @@ else
             return;
         }
 
-        people.Add(p);
+
 
         //RecordName = p.FirstName +p.LastName;
-        RecordName = p.FirstName + " " + p.LastName;
+        RecordName = Person.FirstName + " " + Person.LastName;
         Result = true;
         // people = await _peopleData.GetPeople();
-        Person = new DisplayPersonModel();
+        Person = new PersonModel();
         // await jSRuntime.InvokeVoidAsync("SaveMessage", p.FirstName, p.LastName);
         await jSRuntime.InvokeVoidAsync("SetFOcusOnElement", FirstNameText);
 
     }
 
-}
+    }
 
 

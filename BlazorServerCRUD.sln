@@ -13,7 +13,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModelsLibrary", "Models\Mod
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RazorClassLibrary", "RazorClassLibrary\RazorClassLibrary.csproj", "{98F4EE47-CCDE-48CD-936B-0C13F2DE69EA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAPI", "WebAPI\WebAPI.csproj", "{2E395889-BE60-469F-A338-0FF6F9BE7E86}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAPI", "WebAPI\WebAPI.csproj", "{2E395889-BE60-469F-A338-0FF6F9BE7E86}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MVCCRUD", "MVCCRUD\MVCCRUD.csproj", "{C14A9629-A3AA-4335-8A55-9E333CEE9CB7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repository", "Repository\Repository.csproj", "{0DAD69F5-FB41-401F-87D0-EDC66338B5C1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +49,14 @@ Global
 		{2E395889-BE60-469F-A338-0FF6F9BE7E86}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E395889-BE60-469F-A338-0FF6F9BE7E86}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2E395889-BE60-469F-A338-0FF6F9BE7E86}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C14A9629-A3AA-4335-8A55-9E333CEE9CB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C14A9629-A3AA-4335-8A55-9E333CEE9CB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C14A9629-A3AA-4335-8A55-9E333CEE9CB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C14A9629-A3AA-4335-8A55-9E333CEE9CB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0DAD69F5-FB41-401F-87D0-EDC66338B5C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DAD69F5-FB41-401F-87D0-EDC66338B5C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DAD69F5-FB41-401F-87D0-EDC66338B5C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DAD69F5-FB41-401F-87D0-EDC66338B5C1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

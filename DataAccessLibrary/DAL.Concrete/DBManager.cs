@@ -491,5 +491,28 @@ namespace DataAccessLibray.DAL.Concrete
 
         }
 
+        public Task<int> ExecuteNonQueryAsync(string commandText, CommandType type, IDataParameter[] parameters=null)
+        {
+            return Task.Run(() =>
+            {
+                using (var connection = database.CreateConnection())
+                {
+                    connection.Open();
+                    using (var command = database.CreateCommand(commandText, type, connection))
+                    {
+                        if (parameters != null)
+                        {
+                            foreach (IDataParameter parameter in parameters)
+                            {
+                                command.Parameters.Add(parameter);
+                            }
+                        }
+                        return command.ExecuteNonQuery();
+
+                    }
+                }
+
+            });
+        }
     }
 }

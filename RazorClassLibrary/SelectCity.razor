@@ -1,20 +1,30 @@
 ﻿@using Microsoft.JSInterop
 @inject IJSRuntime JSRuntime
-@using DataAccessLibrary.DAL.Models
+@using  DataAccessLibrary.DAL.Models
 @using BusinessAccessLibrary.BAL.Interface
+
 @inject IPeopleData _peopleData
 
-<select  class="form-control">
 
-    @foreach (var city in Cities)
-    {
-        <option value="@city.Id"> @city.Name</option>
-    }
-</select>
+    <select class="form-control"  @onchange="OnChangeEvent" >
+
+        @if (Cities != null)
+        {
+            <option value="">Select City...</option>
+            @foreach (var city in Cities)
+            {
+                <option value="@city.Id"> @city.Name</option>
+            }
+        }
+
+    </select>
 
 @code {
 
+    [Parameter]
+    public EventCallback<ChangeEventArgs> OnChangeEvent { get; set; }
     public List<CityModel> Cities = new List<CityModel>();
+    public int SelectedCity { get; set; }
 
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

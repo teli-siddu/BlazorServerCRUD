@@ -1,0 +1,56 @@
+﻿@model  DataAccessLibrary.DAL.Models.AddPersonViewModel
+
+@{
+    ViewData["Title"] = "AddPerson";
+}
+
+
+<div class="form-container">
+
+    <form method="post" enctype="multipart/form-data">
+
+
+        <div class="form-group col-6">
+            First Name : <input asp-for="Person.FirstName" class="form-control" />
+            <span asp-validation-for="Person.FirstName" class="text-danger"></span>
+        </div>
+
+        <div class="form-group col-6">
+            Last Name : <input asp-for="Person.LastName" class="form-control" />
+            <span asp-validation-for="Person.LastName" class="text-danger"></span>
+        </div>
+
+        <div class="form-group col-6">
+            Email : <input asp-for="Person.Email" class="form-control" />
+            <span asp-validation-for="Person.Email" class="text-danger"></span>
+        </div>
+
+        <div class="form-group col-6">
+            City : <select asp-for="Person.CityId" class="form-control" asp-items="@(new SelectList(Model.Cities,"Id","Name"))">
+            </select>
+            <span asp-validation-for="Person.CityId" class="text-danger"></span>
+        </div>
+        <div class="form-group col-6">
+            Attachment : <input type="file" asp-for="Person.Files" class="form-control" multiple />
+            <span asp-validation-for="Person.Files" class="text-danger"></span>
+        </div>
+        <div class="form-group col-6" style="text-align:center">
+            @if (Model.Person is null)
+            {
+                <input type="submit" class="btn btn-primary" value="Submit" asp-controller="People" asp-action="AddPerson" />
+            }
+            else
+            {
+                <input type="submit" class="btn btn-primary" value="Update" asp-controller="People" asp-action="EditPerson" />
+            }
+
+
+        </div>
+
+
+
+        <input asp-for="Person.Id" type="hidden" />
+    </form>
+
+</div>
+

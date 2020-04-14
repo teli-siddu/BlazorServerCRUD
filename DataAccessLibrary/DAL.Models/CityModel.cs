@@ -8,5 +8,10 @@ namespace DataAccessLibrary.DAL.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
+
+        public StateModel State { get; set; }
+        public ICollection<PersonModel> People { get; set; }
+       
+        
     }
 }

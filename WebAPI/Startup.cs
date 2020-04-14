@@ -2,14 +2,21 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BusinessAccessLibrary.BAL.Conrete;
+using BusinessAccessLibrary.BAL.Interface;
+using DataAccessLibrary;
+using DataAccessLibray.DAL.Concrete;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Repository.Repository.Concrete;
+using Repository.Repository.Interface;
 
 namespace WebAPI
 {
@@ -26,6 +33,18 @@ namespace WebAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddTransient<IPeopleData, PeopleData>();
+            services.AddTransient<IDBManager, DBManager>();
+            services.AddScoped<IPeopleRepository, PeopleRepository>();
+            services.AddDbContext<PeopleDBContext>(options =>
+                                options.UseSqlServer(Configuration.GetConnectionString("Default")));
+            //            services.AddControllerWithViews()
+            //                    .AddNewtonsoftJson(options =>
+            //                    .SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            //);
+            services.AddControllers().AddNewtonsoftJson(options =>
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

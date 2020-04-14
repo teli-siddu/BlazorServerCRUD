@@ -20,6 +20,7 @@ namespace DataAccessLibray.DAL.Concrete
         object GetScalarValue(string commandText, CommandType type, IDataParameter[] parameters = null);
         void Insert(string commandText, CommandType type, IDataParameter[] parameters);
         Task<int> InsertAsync(string commandText, CommandType type, IDataParameter[] parameters);
+        Task<int> ExecuteNonQueryAsync(string commandText, CommandType type, IDataParameter[] parameters);
 
         int Insert(string commandText, CommandType type, IDataParameter[] parameters, out int lastId);
         long Insert(string commandText, CommandType type, IDataParameter[] parameters, out long lastId);

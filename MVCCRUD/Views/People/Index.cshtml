@@ -1,0 +1,65 @@
+﻿@model DataAccessLibrary.DAL.Models.PeopleViewModel
+
+
+
+<div class="form-group">
+    <a asp-controller="People" asp-action="AddPerson">Add Person</a>
+</div>
+
+<div class="search-container form-group">
+    <form asp-action="Search" asp-controller="People">
+        <div class="row">
+            <div class="col-md-3">
+                <input type="text" asp-for="Search.Name" class="form-control" placeholder="search" />
+            </div>
+            <div class="col-md-2">
+              
+                <input type="submit" class="btn btn-success" value="Search" />
+            </div>
+        </div>
+       
+    </form>
+
+</div>
+
+<table class="table">
+    <tr>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Email</th>
+        <th>City</th>
+        <th>Attachments</th>
+        <th>Actions</th>
+    </tr>
+
+    @foreach (var person in Model.People)
+    {
+        <tr>
+            <td>@person.FirstName</td>
+            <td>@person.LastName</td>
+            <td>@person.Email</td>
+            <td>@person.City?.Name</td>
+            
+            <td>
+                @if (@person.Attachments.Count > 0) 
+                {
+                   <ul class="list-group list-group-flush">
+                       @foreach (var attachment in person.Attachments) 
+                       {
+                           <li class="list-group-item"><a asp-controller="People" asp-action="ViewDocument" asp-route-Id="@attachment.Id" >@attachment.Name</a></li>
+                       }
+                   </ul>
+                }
+         
+            </td>
+
+            <td><a asp-controller="People" asp-action="EditPerson" asp-route-Id="@person.Id">Edit</a>   <a asp-controller="People" asp-action="DeletePerson" asp-route-Id="@person.Id">Delete</a> </td>
+            
+        </tr>
+    }
+
+
+</table>
+
+
+

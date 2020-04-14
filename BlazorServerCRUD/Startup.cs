@@ -15,6 +15,13 @@ using DataAccessLibray.DAL.Concrete;
 using BusinessAccessLibrary.BAL.Interface;
 using BusinessAccessLibrary.BAL.Conrete;
 using System.Net.Http;
+using Microsoft.EntityFrameworkCore;
+using DataAccessLibrary;
+//using DataAccessLibrary.DAL.Services.People;
+using Repository.Repository.Interface;
+using Repository.Repository.Concrete;
+using BlazorServerCRUD.Services.Services.Interface;
+using BlazorServerCRUD.Services.Services.Concrete;
 
 namespace BlazorServerCRUD
 {
@@ -34,22 +41,31 @@ namespace BlazorServerCRUD
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
+           // services.AddSingleton<PeopleService>();
             //services.AddTransient<ISqlDataAccess, DataAccessLibrary.SqlDataAccess>();
-            services.AddTransient<IPeopleData, PeopleData>();
-            services.AddTransient<IDBManager, DBManager>();
-
-            if (services.All(x => x.ServiceType != typeof(HttpClient)))
+            //services.AddTransient<IPeopleData, PeopleData>();
+            //services.AddTransient<IDBManager, DBManager>();
+            //services.AddTransient<IPeopleRepository, PeopleRepository>();
+           
+            services.AddDbContext<PeopleDBContext>(options =>
+                                 options.UseSqlServer(Configuration.GetConnectionString("Default"))
+                                                  );
+            services.AddHttpClient<IPeopleService, PeopleService>(client =>
             {
-                services.AddScoped(
-                    s =>
-                    {
-                        var navigationManager = s.GetRequiredService<NavigationManager>();
-                        return new HttpClient
-                        {
-                            BaseAddress = new Uri(navigationManager.BaseUri)
-                        };
-                    });
-            }
+                client.BaseAddress = new Uri("https://localhost:44333/");
+            });
+            //if (services.All(x => x.ServiceType != typeof(HttpClient)))
+            //{
+            //    services.AddScoped(
+            //        s =>
+            //        {
+            //            var navigationManager = s.GetRequiredService<NavigationManager>();
+            //            return new HttpClient
+            //            {
+            //                BaseAddress = new Uri(navigationManager.BaseUri)
+            //            };
+            //        });
+            //}
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

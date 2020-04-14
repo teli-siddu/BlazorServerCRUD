@@ -5,12 +5,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Data\People\**" />
     <Compile Remove="Pages\MyPages\**" />
     <Compile Remove="Shared\ValidationMessages\**" />
+    <Content Remove="Data\People\**" />
     <Content Remove="Pages\MyPages\**" />
     <Content Remove="Shared\ValidationMessages\**" />
+    <EmbeddedResource Remove="Data\People\**" />
     <EmbeddedResource Remove="Pages\MyPages\**" />
     <EmbeddedResource Remove="Shared\ValidationMessages\**" />
+    <None Remove="Data\People\**" />
     <None Remove="Pages\MyPages\**" />
     <None Remove="Shared\ValidationMessages\**" />
   </ItemGroup>
@@ -20,7 +24,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="DataJuggler.Blazor.FileUpload" Version="1.3.4" />
     <PackageReference Include="MatBlazor" Version="2.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,6 +38,7 @@
     <ProjectReference Include="..\DataAccessLibrary\DataAccessLibrary.csproj" />
     <ProjectReference Include="..\Models\ModelsLibrary.csproj" />
     <ProjectReference Include="..\RazorClassLibrary\RazorClassLibrary.csproj" />
+    <ProjectReference Include="..\Repository\Repository.csproj" />
   </ItemGroup>
 
 </Project>
